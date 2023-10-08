@@ -2,10 +2,10 @@ variable "cloudfront_oai_iam_arn" {
   type = string
 }
 
-variable "bucket_id" {
+variable "oai_bucket_id" {
   type = string
 }
 
-variable "bucket_arn" {
+variable "oai_bucket_arn" {
   type = string
 }

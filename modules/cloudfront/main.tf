@@ -1,5 +1,6 @@
 locals {
-  origin_id = "s3-saturn5"
+  s3_origin_oai = "bucket-oai"
+  s3_origin_oac = "bucket-oac"
 }
 
 resource "aws_cloudfront_origin_access_identity" "main" {
@@ -7,15 +8,15 @@ resource "aws_cloudfront_origin_access_identity" "main" {
 }
 
 resource "aws_cloudfront_distribution" "s3_distribution" {
-  price_class         = var.price_class
-  enabled             = true
-  is_ipv6_enabled     = true
-  comment             = "Saturn 5 CloudFront"
-  default_root_object = "index.html"
+  price_class     = var.price_class
+  enabled         = true
+  is_ipv6_enabled = true
+  comment         = "Distribution for OAI and OAC bucket origins"
+  # default_root_object = "index.html"
 
   origin {
-    domain_name = var.bucket_regional_domain_name
-    origin_id   = local.origin_id
+    domain_name = var.oai_bucket_domain_name
+    origin_id   = local.s3_origin_oai
 
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.main.cloudfront_access_identity_path
@@ -26,7 +27,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   default_cache_behavior {
     allowed_methods  = ["HEAD", "GET"]
     cached_methods   = ["HEAD", "GET"]
-    target_origin_id = local.origin_id
+    target_origin_id = local.s3_origin_oai
 
     forwarded_values {
       query_string = false
@@ -44,67 +45,41 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   restrictions {
     geo_restriction {
-      restriction_type = "whitelist"
-      locations        = ["*"]
+      restriction_type = "none"
     }
   }
 
   viewer_certificate {
     cloudfront_default_certificate = true
   }
-
-  logging_config {
-    include_cookies = false
-    bucket          = aws_s3_bucket.main.bucket_domain_name
-    prefix          = "cloudfront/"
-  }
-
-  depends_on = [
-    aws_s3_bucket_policy.cloudfront_oai,
-    aws_s3_bucket_acl.cloudfront,
-  ]
 }
 
 
 ### S3 Bucket ###
 
-resource "random_string" "random_suffix" {
-  length  = 6
-  special = false
-  upper   = false
-}
+# resource "random_string" "random_suffix" {
+#   length  = 6
+#   special = false
+#   upper   = false
+# }
 
-resource "aws_s3_bucket" "main" {
-  bucket = "cloufrontlogs-saturn5-${random_string.random_suffix.result}"
-}
+# resource "aws_s3_bucket" "main" {
+#   bucket = "cloufrontlogs-saturn5-${random_string.random_suffix.result}"
+# }
 
-data "aws_iam_policy_document" "s3_policy" {
-  statement {
-    actions   = ["s3:*"]
-    resources = ["${aws_s3_bucket.main.arn}/*"]
+# data "aws_iam_policy_document" "s3_policy" {
+#   statement {
+#     actions   = ["s3:*"]
+#     resources = ["${aws_s3_bucket.main.arn}/*"]
 
-    principals {
-      type        = "AWS"
-      identifiers = [aws_cloudfront_origin_access_identity.main.iam_arn]
-    }
-  }
-}
+#     principals {
+#       type        = "AWS"
+#       identifiers = [aws_cloudfront_origin_access_identity.main.iam_arn]
+#     }
+#   }
+# }
 
-resource "aws_s3_bucket_policy" "cloudfront_oai" {
-  bucket = aws_s3_bucket.main.id
-  policy = data.aws_iam_policy_document.s3_policy.json
-}
-
-resource "aws_s3_bucket_ownership_controls" "main" {
-  bucket = aws_s3_bucket.main.id
-  rule {
-    object_ownership = "BucketOwnerPreferred"
-  }
-}
-
-resource "aws_s3_bucket_acl" "cloudfront" {
-  depends_on = [aws_s3_bucket_ownership_controls.main]
-
-  bucket = aws_s3_bucket.main.id
-  acl    = "private"
-}
+# resource "aws_s3_bucket_policy" "cloudfront_oai" {
+#   bucket = aws_s3_bucket.main.id
+#   policy = data.aws_iam_policy_document.s3_policy.json
+# }

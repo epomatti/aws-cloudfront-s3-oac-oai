@@ -1,7 +1,7 @@
 data "aws_iam_policy_document" "s3_policy" {
   statement {
     actions   = ["s3:GetObject"]
-    resources = ["${var.bucket_arn}/*"]
+    resources = ["${var.oai_bucket_arn}/*"]
 
     principals {
       type        = "AWS"
@@ -11,6 +11,6 @@ data "aws_iam_policy_document" "s3_policy" {
 }
 
 resource "aws_s3_bucket_policy" "cloudfront_oai" {
-  bucket = var.bucket_id
+  bucket = var.oai_bucket_id
   policy = data.aws_iam_policy_document.s3_policy.json
 }
