@@ -44,12 +44,10 @@ resource "aws_kms_key_policy" "oac" {
         "Resource" : "*",
       },
       {
-        "Sid" : "Allow use of the key",
+        "Sid" : "AllowCloudFrontServicePrincipalSSE-KMS",
         "Effect" : "Allow",
         "Principal" : {
-          "Service" : [
-            "cloudfront.amazonaws.com"
-          ]
+          "Service" : "cloudfront.amazonaws.com"
         },
         "Action" : [
           "kms:Decrypt",
@@ -75,7 +73,7 @@ resource "aws_s3_bucket_policy" "oac" {
     "Id" : "PolicyForCloudFrontPrivateContent",
     "Statement" : [
       {
-        "Sid" : "AllowCloudFrontServicePrincipalOAC",
+        "Sid" : "AllowCloudFrontServicePrincipalReadOnly",
         "Effect" : "Allow",
         "Principal" : {
           "Service" : "cloudfront.amazonaws.com"
