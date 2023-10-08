@@ -26,7 +26,7 @@ Policy implementation between the two authentication methods differ:
 
 ---
 
-### 🧹 Clean-up
+### Clean-up
 
 Destroy the resources when you're done using it:
 
