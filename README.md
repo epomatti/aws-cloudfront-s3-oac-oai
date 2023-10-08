@@ -2,7 +2,7 @@
 
 AWS CloudFront S3 origina with OAC and OAI.
 
-As per current [documentation][1], **OAC** authenticated requests supports:
+As per the current [documentation][1], **OAC** authenticated requests supports:
 
 - All Amazon S3 buckets in all AWS Regions, including opt-in Regions launched after December 2022
 - Amazon S3 [server-side encryption][2] with AWS KMS (SSE-KMS)
@@ -15,14 +15,14 @@ terraform init
 terraform apply -auto-approve
 ```
 
+To test the distribution access the endpoints on paths `/oac` and `/oai` respectively.
+
 Policy implementation between the two authentication methods differ:
 
 | Policy | OAC | OAI |
 |-|-|-|
 | Principal | `cloudfront.amazonaws.com` | OAI identity id |
 | Condition | `AWS:SourceArn` with the distribution ARN | n/a|
-
-To test the distribution access the endpoints on paths `/oac` and `/oai` respectively.
 
 
 [1]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html
