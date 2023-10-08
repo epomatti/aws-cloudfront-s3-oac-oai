@@ -1,4 +1,4 @@
-resource "aws_s3_bucket_policy" "cloudfront_oai" {
+resource "aws_s3_bucket_policy" "oai" {
   bucket = var.oai_bucket_id
 
   policy = jsonencode({
@@ -13,7 +13,18 @@ resource "aws_s3_bucket_policy" "cloudfront_oai" {
         },
         "Action" : "s3:GetObject",
         "Resource" : "${var.oai_bucket_arn}/*"
-      },
+      }
+    ]
+  })
+}
+
+resource "aws_s3_bucket_policy" "oac" {
+  bucket = var.oac_bucket_id
+
+  policy = jsonencode({
+    "Version" : "2008-10-17",
+    "Id" : "PolicyForCloudFrontPrivateContent",
+    "Statement" : [
       {
         "Sid" : "AllowCloudFrontServicePrincipalOAC",
         "Effect" : "Allow",

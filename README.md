@@ -1,4 +1,4 @@
-# aws-cloudfront-s3-oac-oai
+# AWS CloudFront OAC OAI
 
 AWS CloudFront S3 origina with OAC and OAI.
 
@@ -8,6 +8,21 @@ As per current [documentation][1], **OAC** authenticated requests supports:
 - Amazon S3 [server-side encryption][2] with AWS KMS (SSE-KMS)
 - Dynamic requests (PUT and DELETE) to Amazon S3
 
+To create the infrastructure:
+
+```sh
+terraform init
+terraform apply -auto-approve
+```
+
+Policy implementation between the two authentication methods differ:
+
+| Policy | OAC | OAI |
+|-|-|-|
+| Principal | `cloudfront.amazonaws.com` | OAI identity id |
+| Condition | `AWS:SourceArn` with the distribution ARN | n/a|
+
+To test the distribution access the endpoints on paths `/oac` and `/oai` respectively.
 
 
 [1]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html

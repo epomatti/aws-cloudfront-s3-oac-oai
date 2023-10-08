@@ -10,6 +10,10 @@ variable "oai_bucket_arn" {
   type = string
 }
 
+variable "oac_bucket_id" {
+  type = string
+}
+
 variable "oac_bucket_arn" {
   type = string
 }

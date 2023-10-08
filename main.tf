@@ -37,19 +37,12 @@ module "s3_permissions" {
   source = "./modules/s3/permissions"
 
   # OAI
-  cloudfront_oai_iam_arn = module.cloudfront.oai_iam_arn
-  oai_bucket_arn         = module.bucket_oai.bucket_arn
   oai_bucket_id          = module.bucket_oai.bucket_id
+  oai_bucket_arn         = module.bucket_oai.bucket_arn
+  cloudfront_oai_iam_arn = module.cloudfront.oai_iam_arn
 
   # OAC
-  cloudfront_distribution_arn = module.cloudfront.distribution_arn
+  oac_bucket_id               = module.bucket_oac.bucket_id
   oac_bucket_arn              = module.bucket_oac.bucket_arn
+  cloudfront_distribution_arn = module.cloudfront.distribution_arn
 }
-
-# module "oai" {
-#   source                 = "./modules/s3/oai"
-#   cloudfront_oai_iam_arn = module.cloudfront.oai_iam_arn
-#   bucket_arn             = module.bucket.bucket_arn
-#   bucket_id              = module.bucket.bucket_id
-# }
-
