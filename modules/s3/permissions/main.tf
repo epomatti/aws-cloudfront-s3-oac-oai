@@ -1,3 +1,12 @@
+data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
+
+locals {
+  aws_account_id        = data.aws_caller_identity.current.account_id
+  aws_region            = data.aws_region.current.name
+  aws_account_principal = "arn:aws:iam::${local.aws_account_id}:root"
+}
+
 resource "aws_s3_bucket_policy" "oai" {
   bucket = var.oai_bucket_id
 
@@ -13,6 +22,46 @@ resource "aws_s3_bucket_policy" "oai" {
         },
         "Action" : "s3:GetObject",
         "Resource" : "${var.oai_bucket_arn}/*"
+      }
+    ]
+  })
+}
+
+resource "aws_kms_key_policy" "oac" {
+  key_id = var.kms_key_arn
+
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Id" : "EvandroCustomEFS",
+    "Statement" : [
+      {
+        "Sid" : "Enable IAM User Permissions",
+        "Effect" : "Allow",
+        "Principal" : {
+          "AWS" : "${local.aws_account_principal}"
+        }
+        "Action" : "kms:*",
+        "Resource" : "*",
+      },
+      {
+        "Sid" : "Allow use of the key",
+        "Effect" : "Allow",
+        "Principal" : {
+          "Service" : [
+            "cloudfront.amazonaws.com"
+          ]
+        },
+        "Action" : [
+          "kms:Decrypt",
+          "kms:Encrypt",
+          "kms:GenerateDataKey*"
+        ],
+        "Resource" : "*",
+        "Condition" : {
+          "StringEquals" : {
+            "aws:SourceArn" : "${var.cloudfront_distribution_arn}"
+          }
+        }
       }
     ]
   })

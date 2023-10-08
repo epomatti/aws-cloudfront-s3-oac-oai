@@ -9,3 +9,7 @@ output "bucket_id" {
 output "bucket_regional_domain_name" {
   value = aws_s3_bucket.main.bucket_regional_domain_name
 }
+
+output "kms_key_arn" {
+  value = aws_kms_key.oac.arn
+}

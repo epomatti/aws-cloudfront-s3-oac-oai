@@ -19,7 +19,7 @@ resource "aws_s3_object" "index" {
   content_type   = "text/html"
 }
 
-resource "aws_kms_key" "mykey" {
+resource "aws_kms_key" "oac" {
   description             = "This key is used to encrypt bucket objects"
   deletion_window_in_days = 10
 }
@@ -29,7 +29,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "default" {
 
   rule {
     apply_server_side_encryption_by_default {
-      kms_master_key_id = aws_kms_key.mykey.arn
+      kms_master_key_id = aws_kms_key.oac.arn
       sse_algorithm     = "aws:kms"
     }
   }

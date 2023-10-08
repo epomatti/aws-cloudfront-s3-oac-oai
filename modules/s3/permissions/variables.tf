@@ -21,3 +21,7 @@ variable "oac_bucket_arn" {
 variable "cloudfront_distribution_arn" {
   type = string
 }
+
+variable "kms_key_arn" {
+  type = string
+}

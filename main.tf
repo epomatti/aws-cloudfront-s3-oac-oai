@@ -42,6 +42,7 @@ module "s3_permissions" {
   cloudfront_oai_iam_arn = module.cloudfront.oai_iam_arn
 
   # OAC
+  kms_key_arn                 = module.bucket_oac.kms_key_arn
   oac_bucket_id               = module.bucket_oac.bucket_id
   oac_bucket_arn              = module.bucket_oac.bucket_arn
   cloudfront_distribution_arn = module.cloudfront.distribution_arn
