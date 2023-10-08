@@ -68,33 +68,3 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     cloudfront_default_certificate = true
   }
 }
-
-
-### S3 Bucket ###
-
-# resource "random_string" "random_suffix" {
-#   length  = 6
-#   special = false
-#   upper   = false
-# }
-
-# resource "aws_s3_bucket" "main" {
-#   bucket = "cloufrontlogs-saturn5-${random_string.random_suffix.result}"
-# }
-
-# data "aws_iam_policy_document" "s3_policy" {
-#   statement {
-#     actions   = ["s3:*"]
-#     resources = ["${aws_s3_bucket.main.arn}/*"]
-
-#     principals {
-#       type        = "AWS"
-#       identifiers = [aws_cloudfront_origin_access_identity.main.iam_arn]
-#     }
-#   }
-# }
-
-# resource "aws_s3_bucket_policy" "cloudfront_oai" {
-#   bucket = aws_s3_bucket.main.id
-#   policy = data.aws_iam_policy_document.s3_policy.json
-# }
