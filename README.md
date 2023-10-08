@@ -22,6 +22,8 @@ As described in the [S3 origin documentation][3], S3 regional domains should be 
 <bucket-name>.s3.<region>.amazonaws.com
 ```
 
+For server-side encryption (SSE) The implementation enabled `aws:kms` (SSE-KMS) encryption for OAC, and `AES256` (SSE-S3)for OAI.
+
 To test the distribution access the endpoints on paths `/oac` and `/oai` respectively.
 
 Policy implementation between the two authentication methods differ:

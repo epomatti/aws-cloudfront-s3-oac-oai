@@ -25,6 +25,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
     domain_name = var.oai_bucket_regional_domain_name
     origin_id   = local.s3_origin_oai
+    origin_path = "/oai"
 
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.main.cloudfront_access_identity_path
@@ -33,9 +34,11 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   # OAC
   origin {
-    domain_name              = var.oac_bucket_regional_domain_name
+    domain_name = var.oac_bucket_regional_domain_name
+    origin_id   = local.s3_origin_oac
+    origin_path = "/oac"
+
     origin_access_control_id = aws_cloudfront_origin_access_control.main.id
-    origin_id                = local.s3_origin_oac
   }
 
   default_cache_behavior {
