@@ -18,3 +18,13 @@ resource "aws_s3_object" "index" {
   content_base64 = filebase64("${path.module}/../../assets/index-oai.html")
   content_type   = "text/html"
 }
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "default" {
+  bucket = aws_s3_bucket.main.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
