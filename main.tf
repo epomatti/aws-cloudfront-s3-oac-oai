@@ -26,11 +26,11 @@ module "bucket_oac" {
 }
 
 module "cloudfront" {
-  source                 = "./modules/cloudfront"
-  project_name           = local.project_name
-  price_class            = var.cloudfront_price_class
-  oai_bucket_domain_name = module.bucket_oai.bucket_domain_name
-  oac_bucket_domain_name = module.bucket_oac.bucket_domain_name
+  source                          = "./modules/cloudfront"
+  project_name                    = local.project_name
+  price_class                     = var.cloudfront_price_class
+  oai_bucket_regional_domain_name = module.bucket_oai.bucket_regional_domain_name
+  oac_bucket_regional_domain_name = module.bucket_oac.bucket_regional_domain_name
 }
 
 module "s3_permissions" {

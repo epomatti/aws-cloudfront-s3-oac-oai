@@ -15,7 +15,6 @@ resource "aws_cloudfront_origin_access_control" "main" {
   signing_protocol                  = "sigv4"
 }
 
-### Distribution ###
 resource "aws_cloudfront_distribution" "s3_distribution" {
   price_class     = var.price_class
   enabled         = true
@@ -24,7 +23,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   # OAI
   origin {
-    domain_name = var.oai_bucket_domain_name
+    domain_name = var.oai_bucket_regional_domain_name
     origin_id   = local.s3_origin_oai
 
     s3_origin_config {
@@ -34,28 +33,33 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   # OAC
   origin {
-    domain_name              = var.oac_bucket_domain_name
+    domain_name              = var.oac_bucket_regional_domain_name
     origin_access_control_id = aws_cloudfront_origin_access_control.main.id
     origin_id                = local.s3_origin_oac
   }
 
   default_cache_behavior {
-    allowed_methods  = ["HEAD", "GET"]
+    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["HEAD", "GET"]
     target_origin_id = local.s3_origin_oai
 
-    forwarded_values {
-      query_string = false
-
-      cookies {
-        forward = "none"
-      }
-    }
+    # CachingDisabled managed policy
+    cache_policy_id = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
 
     viewer_protocol_policy = "allow-all"
-    min_ttl                = 0
-    default_ttl            = 3600
-    max_ttl                = 86400
+  }
+
+  ordered_cache_behavior {
+    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods   = ["HEAD", "GET"]
+    target_origin_id = local.s3_origin_oac
+
+    path_pattern = "/oac"
+
+    # CachingDisabled managed policy
+    cache_policy_id = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
+
+    viewer_protocol_policy = "allow-all"
   }
 
   restrictions {

@@ -15,6 +15,13 @@ terraform init
 terraform apply -auto-approve
 ```
 
+As described in the [S3 origin documentation][3], S3 regional domains should be used:
+
+```sh
+# Use the regional bucket domain
+<bucket-name>.s3.<region>.amazonaws.com
+```
+
 To test the distribution access the endpoints on paths `/oac` and `/oai` respectively.
 
 Policy implementation between the two authentication methods differ:
@@ -36,3 +43,4 @@ terraform destroy -auto-approve
 
 [1]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html
 [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/serv-side-encryption.html
+[3]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/DownloadDistS3AndCustomOrigins.html#using-s3-as-origin
