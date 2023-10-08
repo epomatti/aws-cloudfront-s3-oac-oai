@@ -24,6 +24,15 @@ Policy implementation between the two authentication methods differ:
 | Principal | `cloudfront.amazonaws.com` | OAI identity id |
 | Condition | `AWS:SourceArn` with the distribution ARN | n/a|
 
+---
+
+### 🧹 Clean-up
+
+Destroy the resources when you're done using it:
+
+```sh
+terraform destroy -auto-approve
+```
 
 [1]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html
 [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/serv-side-encryption.html
