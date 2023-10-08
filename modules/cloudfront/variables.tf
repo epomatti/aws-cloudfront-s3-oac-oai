@@ -9,3 +9,7 @@ variable "price_class" {
 variable "oai_bucket_domain_name" {
   type = string
 }
+
+variable "oac_bucket_domain_name" {
+  type = string
+}

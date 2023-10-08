@@ -20,20 +20,30 @@ module "bucket_oai" {
   project_name = local.project_name
 }
 
+module "bucket_oac" {
+  source       = "./modules/s3/buckets/oac"
+  project_name = local.project_name
+}
+
 module "cloudfront" {
   source                 = "./modules/cloudfront"
   project_name           = local.project_name
   price_class            = var.cloudfront_price_class
   oai_bucket_domain_name = module.bucket_oai.bucket_domain_name
+  oac_bucket_domain_name = module.bucket_oac.bucket_domain_name
 }
 
 module "s3_permissions" {
-  source                 = "./modules/s3/permissions"
+  source = "./modules/s3/permissions"
 
-  // OAI
+  # OAI
   cloudfront_oai_iam_arn = module.cloudfront.oai_iam_arn
   oai_bucket_arn         = module.bucket_oai.bucket_arn
   oai_bucket_id          = module.bucket_oai.bucket_id
+
+  # OAC
+  cloudfront_distribution_arn = module.cloudfront.distribution_arn
+  oac_bucket_arn              = module.bucket_oac.bucket_arn
 }
 
 # module "oai" {

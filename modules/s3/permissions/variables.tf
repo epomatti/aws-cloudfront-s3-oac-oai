@@ -9,3 +9,11 @@ variable "oai_bucket_id" {
 variable "oai_bucket_arn" {
   type = string
 }
+
+variable "oac_bucket_arn" {
+  type = string
+}
+
+variable "cloudfront_distribution_arn" {
+  type = string
+}

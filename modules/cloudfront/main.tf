@@ -7,13 +7,22 @@ resource "aws_cloudfront_origin_access_identity" "main" {
   comment = "S3 CloudFront OAI"
 }
 
+resource "aws_cloudfront_origin_access_control" "main" {
+  name                              = "oacbucket"
+  description                       = "OAC authorizationf for S3 bucket"
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
+}
+
+### Distribution ###
 resource "aws_cloudfront_distribution" "s3_distribution" {
   price_class     = var.price_class
   enabled         = true
   is_ipv6_enabled = true
   comment         = "Distribution for OAI and OAC bucket origins"
-  # default_root_object = "index.html"
 
+  # OAI
   origin {
     domain_name = var.oai_bucket_domain_name
     origin_id   = local.s3_origin_oai
@@ -23,6 +32,12 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     }
   }
 
+  # OAC
+  origin {
+    domain_name              = var.oac_bucket_domain_name
+    origin_access_control_id = aws_cloudfront_origin_access_control.main.id
+    origin_id                = local.s3_origin_oac
+  }
 
   default_cache_behavior {
     allowed_methods  = ["HEAD", "GET"]
