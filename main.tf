@@ -31,11 +31,14 @@ module "bucket_presigned_url" {
 }
 
 module "cloudfront" {
-  source                          = "./modules/cloudfront"
-  project_name                    = local.project_name
-  price_class                     = var.cloudfront_price_class
+  source       = "./modules/cloudfront"
+  project_name = local.project_name
+  price_class  = var.cloudfront_price_class
+
   oai_bucket_regional_domain_name = module.bucket_oai.bucket_regional_domain_name
   oac_bucket_regional_domain_name = module.bucket_oac.bucket_regional_domain_name
+
+  signed_vouchers_bucket_regional_domain_name = module.bucket_presigned_url.bucket_regional_domain_name
 }
 
 module "s3_permissions" {
@@ -47,8 +50,14 @@ module "s3_permissions" {
   cloudfront_oai_iam_arn = module.cloudfront.oai_iam_arn
 
   # OAC
+  cloudfront_distribution_arn = module.cloudfront.distribution_arn
+
+  # OAC bucket
   kms_key_arn                 = module.bucket_oac.kms_key_arn
   oac_bucket_id               = module.bucket_oac.bucket_id
   oac_bucket_arn              = module.bucket_oac.bucket_arn
-  cloudfront_distribution_arn = module.cloudfront.distribution_arn
+  
+  # Signed URLs bucket
+  signedurls_bucket_id  = module.bucket_presigned_url.bucket_id
+  signedurls_bucket_arn = module.bucket_presigned_url.bucket_arn
 }

@@ -1,6 +1,7 @@
 locals {
   s3_origin_oac = "bucket-oac"
   s3_origin_oai = "bucket-oai"
+  s3_signedurls = "bucket-signedurls"
 }
 
 resource "aws_cloudfront_origin_access_identity" "main" {
@@ -9,7 +10,15 @@ resource "aws_cloudfront_origin_access_identity" "main" {
 
 resource "aws_cloudfront_origin_access_control" "main" {
   name                              = "oacbucket"
-  description                       = "OAC authorizationf for S3 bucket"
+  description                       = "OAC authorization for S3 bucket"
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
+}
+
+resource "aws_cloudfront_origin_access_control" "vouchers" {
+  name                              = "vouchersbucket"
+  description                       = "Signed URLs for vouchers"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
   signing_protocol                  = "sigv4"
@@ -20,6 +29,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   enabled         = true
   is_ipv6_enabled = true
   comment         = "Distribution for OAI and OAC bucket origins"
+
+  ### ORIGINS ###
 
   # OAC
   origin {
@@ -39,6 +50,17 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     }
   }
 
+  # Signed URLs Vouchers
+  origin {
+    domain_name = var.signed_vouchers_bucket_regional_domain_name
+    origin_id   = local.s3_signedurls
+
+    origin_access_control_id = aws_cloudfront_origin_access_control.vouchers.id
+  }
+
+
+  ### BEHAVIORS ###
+
   ordered_cache_behavior {
     allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods         = ["HEAD", "GET"]
@@ -56,6 +78,19 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     target_origin_id       = local.s3_origin_oai
     path_pattern           = "/oai/*"
     viewer_protocol_policy = "redirect-to-https"
+
+    # CachingDisabled managed policy
+    cache_policy_id = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
+  }
+
+  ordered_cache_behavior {
+    allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods         = ["HEAD", "GET"]
+    target_origin_id       = local.s3_signedurls
+    path_pattern           = "/vouchers/*"
+    viewer_protocol_policy = "redirect-to-https"
+
+    trusted_key_groups = [aws_cloudfront_key_group.default.id]
 
     # CachingDisabled managed policy
     cache_policy_id = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
@@ -80,4 +115,18 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   viewer_certificate {
     cloudfront_default_certificate = true
   }
+}
+
+### Signed URLs stuff
+
+resource "aws_cloudfront_public_key" "default" {
+  comment     = "Signed URLs with Terraform"
+  encoded_key = file("${path.module}/../../keys/public.pem")
+  name        = "terraform-key"
+}
+
+resource "aws_cloudfront_key_group" "default" {
+  comment = "Signed URLs with Terraform"
+  items   = [aws_cloudfront_public_key.default.id]
+  name    = "terraform-key-group"
 }

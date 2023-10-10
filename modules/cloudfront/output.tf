@@ -11,3 +11,7 @@ output "distribution_arn" {
   value       = aws_cloudfront_distribution.s3_distribution.arn
   description = "Used for OAC"
 }
+
+output "key_pair_id" {
+  value = aws_cloudfront_public_key.default.id
+}

@@ -1,0 +1,12 @@
+{
+  "Statement": [
+    {
+      "Resource": "https://d1i7oyiamwy9kd.cloudfront.net/vouchers/voucher.txt",
+      "Condition": {
+        "DateLessThan": {
+          "AWS:EpochTime": 1698637841
+        }
+      }
+    }
+  ]
+}

@@ -25,3 +25,14 @@ variable "cloudfront_distribution_arn" {
 variable "kms_key_arn" {
   type = string
 }
+
+
+# Signed URLs
+
+variable "signedurls_bucket_id" {
+  type = string
+}
+
+variable "signedurls_bucket_arn" {
+  type = string
+}
