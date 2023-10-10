@@ -33,6 +33,26 @@ Policy implementation between the two authentication methods differ:
 | Principal | `cloudfront.amazonaws.com` | OAI identity id |
 | Condition | `AWS:SourceArn` with the distribution ARN | n/a|
 
+## Sharing Objects with URLs
+
+There are two types of share with URLs:
+
+- [S3 presigned URLs][4]
+- CloudFront Signed URLs
+
+### S3 presigned URLs
+
+You can generate a presigned URL which will use the credentials of the user who generated the URLs. This would be useful for users who do not have access to the account with AWS credentials ("anonymous").
+
+Generate a presigned URL, open an anonymous browser session and use the link to access the object:
+
+```sh
+# For regions launched prior to 2019
+aws s3 presign s3://bucket-presignedurl-vouchers010203/vouchers/voucher.txt --expires-in 604800
+```
+
+
+
 ---
 
 ### Clean-up
@@ -46,3 +66,4 @@ terraform destroy -auto-approve
 [1]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html
 [2]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/serv-side-encryption.html
 [3]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/DownloadDistS3AndCustomOrigins.html#using-s3-as-origin
+[4]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/ShareObjectPreSignedURL.html

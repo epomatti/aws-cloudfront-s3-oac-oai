@@ -25,6 +25,11 @@ module "bucket_oac" {
   project_name = local.project_name
 }
 
+module "bucket_presigned_url" {
+  source       = "./modules/s3/buckets/presignedurl"
+  project_name = local.project_name
+}
+
 module "cloudfront" {
   source                          = "./modules/cloudfront"
   project_name                    = local.project_name
