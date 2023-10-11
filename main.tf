@@ -49,6 +49,8 @@ module "cloudfront" {
 
   signed_vouchers_bucket_regional_domain_name = module.bucket_presigned_url.bucket_regional_domain_name
 
+  enforce_tls_bucket_regional_domain_name = module.bucket_enforcetls.bucket_regional_domain_name
+
   acm_arn                  = module.acm.acm_arn
   domain_name              = var.certificate_domain
   minimum_protocol_version = var.cloudfront_minimum_protocol_version

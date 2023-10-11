@@ -18,6 +18,10 @@ variable "signed_vouchers_bucket_regional_domain_name" {
   type = string
 }
 
+variable "enforce_tls_bucket_regional_domain_name" {
+  type = string
+}
+
 
 ## Custom TLS
 variable "acm_arn" {
