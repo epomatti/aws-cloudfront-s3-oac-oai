@@ -16,6 +16,16 @@ openssl genrsa -des3 -out keys/private.pem 2048
 openssl rsa -in keys/private.pem -outform PEM -pubout -out keys/public.pem
 ```
 
+Create the `.auto.tfvars` file from the sample:
+
+> The ACM certificate verification will be required
+
+```terraform
+cloudfront_price_class              = "PriceClass_100"
+certificate_domain                  = "cf.example.com"
+cloudfront_minimum_protocol_version = "TLSv1.2_2021"
+```
+
 To create the infrastructure:
 
 ```sh
