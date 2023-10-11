@@ -142,8 +142,8 @@ resource "aws_s3_bucket_policy" "enforce_tls" {
         "Effect" : "Deny",
         "Principal" : "*",
         "Resource" : [
-          "${var.signedurls_bucket_arn}",
-          "${var.signedurls_bucket_arn}/*"
+          "${var.enforce_tls_bucket_arn}",
+          "${var.enforce_tls_bucket_arn}/*"
         ],
         "Condition" : {
           "Bool" : {
