@@ -30,6 +30,10 @@ module "bucket_presigned_url" {
   project_name = local.project_name
 }
 
+module "bucket_enforcetls" {
+  source = "./modules/s3/buckets/enforcetls"
+}
+
 module "cloudfront" {
   source       = "./modules/cloudfront"
   project_name = local.project_name
@@ -53,11 +57,15 @@ module "s3_permissions" {
   cloudfront_distribution_arn = module.cloudfront.distribution_arn
 
   # OAC bucket
-  kms_key_arn                 = module.bucket_oac.kms_key_arn
-  oac_bucket_id               = module.bucket_oac.bucket_id
-  oac_bucket_arn              = module.bucket_oac.bucket_arn
-  
+  kms_key_arn    = module.bucket_oac.kms_key_arn
+  oac_bucket_id  = module.bucket_oac.bucket_id
+  oac_bucket_arn = module.bucket_oac.bucket_arn
+
   # Signed URLs bucket
   signedurls_bucket_id  = module.bucket_presigned_url.bucket_id
   signedurls_bucket_arn = module.bucket_presigned_url.bucket_arn
+
+  # Enforce TLS
+  enforce_tls_bucket_id  = module.bucket_enforcetls.bucket_id
+  enforce_tls_bucket_arn = module.bucket_enforcetls.bucket_arn
 }

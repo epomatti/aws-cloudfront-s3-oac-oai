@@ -36,3 +36,13 @@ variable "signedurls_bucket_id" {
 variable "signedurls_bucket_arn" {
   type = string
 }
+
+# Enforce TLS
+
+variable "enforce_tls_bucket_id" {
+  type = string
+}
+
+variable "enforce_tls_bucket_arn" {
+  type = string
+}

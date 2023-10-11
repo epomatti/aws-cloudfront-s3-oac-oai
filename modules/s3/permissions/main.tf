@@ -115,3 +115,43 @@ resource "aws_s3_bucket_policy" "vouchers_signedurls" {
   })
 }
 
+resource "aws_s3_bucket_policy" "enforce_tls" {
+  bucket = var.enforce_tls_bucket_id
+
+  policy = jsonencode({
+    "Version" : "2008-10-17",
+    "Id" : "PolicyForCloudFrontPrivateContent",
+    "Statement" : [
+      {
+        "Sid" : "AllowCloudFrontServicePrincipalReadOnly",
+        "Effect" : "Allow",
+        "Principal" : {
+          "Service" : "cloudfront.amazonaws.com"
+        },
+        "Action" : "s3:GetObject",
+        "Resource" : "${var.enforce_tls_bucket_arn}/*",
+        "Condition" : {
+          "StringEquals" : {
+            "AWS:SourceArn" : "${var.cloudfront_distribution_arn}"
+          }
+        }
+      },
+      {
+        "Sid" : "EnforceTLS",
+        "Action" : "s3:*",
+        "Effect" : "Deny",
+        "Resource" : [
+          "arn:aws:s3:::DOC-EXAMPLE-BUCKET",
+          "arn:aws:s3:::DOC-EXAMPLE-BUCKET/*"
+        ],
+        "Condition" : {
+          "Bool" : {
+            "aws:SecureTransport" : "false"
+          }
+        }
+      }
+    ]
+  })
+}
+
+

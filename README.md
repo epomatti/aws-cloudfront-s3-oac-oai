@@ -75,6 +75,27 @@ The signed URL will look like this:
 https://ddddddd00001111.cloudfront.net/vouchers/voucher.txt?Expires=1698637841&Signature=<SIGNATURE>&Key-Pair-Id=KQPALV128937
 ```
 
+### Ciphers + Enforce TLS
+
+The following S3 bucket policy enforces TLS by denying insecure transport via `"aws:SecureTransport" : "false"`:
+
+```json
+"Statement" : [
+  {
+    "Sid" : "EnforceTLS",
+    "Action" : "s3:*",
+    "Effect" : "Deny",
+    "Resource" : [
+      "arn:aws:s3:::DOC-EXAMPLE-BUCKET",
+      "arn:aws:s3:::DOC-EXAMPLE-BUCKET/*"
+    ],
+    "Condition" : {
+      "Bool" : {
+        "aws:SecureTransport" : "false"
+      }
+    }
+  }
+]
 ---
 
 ### Clean-up
