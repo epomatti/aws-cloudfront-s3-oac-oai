@@ -77,6 +77,10 @@ https://ddddddd00001111.cloudfront.net/vouchers/voucher.txt?Expires=1698637841&S
 
 ### Ciphers + Enforce TLS
 
+Setting a custom certificate on ACM for CloudFront allows you to select the Ciphers list.
+
+For details, check [Supported protocols and ciphers between viewers and CloudFront](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/secure-connections-supported-viewer-protocols-ciphers.html).
+
 The following S3 bucket policy enforces TLS by denying insecure transport via `"aws:SecureTransport" : "false"`:
 
 ```json

@@ -17,3 +17,17 @@ variable "oac_bucket_regional_domain_name" {
 variable "signed_vouchers_bucket_regional_domain_name" {
   type = string
 }
+
+
+## Custom TLS
+variable "acm_arn" {
+  type = string
+}
+
+variable "domain_name" {
+  type = string
+}
+
+variable "minimum_protocol_version" {
+  type = string
+}

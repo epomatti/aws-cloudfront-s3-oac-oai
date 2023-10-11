@@ -34,6 +34,11 @@ module "bucket_enforcetls" {
   source = "./modules/s3/buckets/enforcetls"
 }
 
+module "acm" {
+  source      = "./modules/acm"
+  domain_name = var.certificate_domain
+}
+
 module "cloudfront" {
   source       = "./modules/cloudfront"
   project_name = local.project_name
@@ -43,6 +48,10 @@ module "cloudfront" {
   oac_bucket_regional_domain_name = module.bucket_oac.bucket_regional_domain_name
 
   signed_vouchers_bucket_regional_domain_name = module.bucket_presigned_url.bucket_regional_domain_name
+
+  acm_arn                  = module.acm.acm_arn
+  domain_name              = var.certificate_domain
+  minimum_protocol_version = var.cloudfront_minimum_protocol_version
 }
 
 module "s3_permissions" {
