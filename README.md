@@ -110,6 +110,8 @@ The following S3 bucket policy enforces TLS by denying insecure transport via `"
     }
   }
 ]
+```
+
 ---
 
 ### Clean-up
